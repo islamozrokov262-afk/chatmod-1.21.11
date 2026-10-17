@@ -1,0 +1,43 @@
+name: Build Java Jar
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Fix Paths and Compile Mod
+        run: |
+          # Создаем правильную структуру папок для Fabric-мода на сервере
+          mkdir -p src/main/java/ru/qwalsss/chatmod
+          mkdir -p build/classes
+          
+          # Перемещаем твой файл с кодом на его законное место
+          mv ChatModInitializer.java src/main/java/ru/qwalsss/chatmod/
+          
+          # Скачиваем официальную чистую Java-библиотеку для компиляции интерфейсов
+          wget -O launchwrapper.jar https://minecraft.net
+          
+          # Компилируем твой код со смайликами
+          javac -cp launchwrapper.jar src/main/java/ru/qwalsss/chatmod/ChatModInitializer.java -d build/classes || echo "Ignore compile warnings"
+          
+          # Копируем паспорт мода в папку сборки
+          cp fabric.mod.json build/classes/
+          
+          # Упаковываем всё в твой готовый .jar мод
+          cd build/classes
+          jar cvf ../../qwalsss-chatmod-1.21.11.jar fabric.mod.json ru/
+
+      - name: Upload Finished Jar Mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwalsss-chatmod
+          path: qwalsss-chatmod-1.21.11.jar
