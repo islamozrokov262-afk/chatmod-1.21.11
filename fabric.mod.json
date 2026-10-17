@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "qwalsss_chatmod",
+  "version": "1.0.0",
+  "name": "Storm Chat Addon",
+  "description": "Custom random HvH suffixes for FunnyMC.",
+  "authors": [
+    "Qwalsss"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ru.qwalsss.chatmod.ChatModInitializer"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.21.11"
+  }
+}
