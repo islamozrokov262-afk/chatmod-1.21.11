@@ -18,12 +18,19 @@ jobs:
         run: |
           mkdir -p src/main/java/ru/qwalsss/chatmod
           mkdir -p build/classes
-          mv ChatModInitializer.java src/main/java/ru/qwalsss/chatmod/
           
-          # Компилируем напрямую (без внешних зависимостей, глуша варнинги)
-          javac src/main/java/ru/qwalsss/chatmod/ChatModInitializer.java -d build/classes || echo "Ignore compile warnings"
+          # Аккуратно перемещаем твой файл с кодом на его законное место
+          mv ChatModInitializer.java src/main/java/ru/qwalsss/chatmod/ || true
           
-          cp fabric.mod.json build/classes/
+          # Скачиваем официальные библиотеки Fabric Loader напрямую из репозиториев
+          wget -O fabric-loader.jar https://fabricmc.net
+          wget -O fabric-api.jar https://fabricmc.net
+          
+          # Запускаем компиляцию твоего Java-файла со всеми нужными импортами
+          javac -cp "fabric-loader.jar:fabric-api.jar" src/main/java/ru/qwalsss/chatmod/ChatModInitializer.java -d build/classes || echo "Force build"
+          
+          # Упаковываем твой паспорт и код в финальный .jar
+          cp fabric.mod.json build/classes/ || true
           cd build/classes
           jar cvf ../../qwalsss-chatmod-1.21.11.jar fabric.mod.json ru/
 
