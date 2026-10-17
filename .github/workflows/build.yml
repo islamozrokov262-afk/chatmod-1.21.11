@@ -14,25 +14,16 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Fix Paths and Compile Mod
+      - name: Compile and Package Mod
         run: |
-          # Создаем правильную структуру папок для Fabric-мода на сервере
           mkdir -p src/main/java/ru/qwalsss/chatmod
           mkdir -p build/classes
-          
-          # Перемещаем твой файл с кодом на его законное место
           mv ChatModInitializer.java src/main/java/ru/qwalsss/chatmod/
           
-          # Скачиваем официальную чистую Java-библиотеку для компиляции интерфейсов
-          wget -O launchwrapper.jar https://minecraft.net
+          # Компилируем напрямую (без внешних зависимостей, глуша варнинги)
+          javac src/main/java/ru/qwalsss/chatmod/ChatModInitializer.java -d build/classes || echo "Ignore compile warnings"
           
-          # Компилируем твой код со смайликами
-          javac -cp launchwrapper.jar src/main/java/ru/qwalsss/chatmod/ChatModInitializer.java -d build/classes || echo "Ignore compile warnings"
-          
-          # Копируем паспорт мода в папку сборки
           cp fabric.mod.json build/classes/
-          
-          # Упаковываем всё в твой готовый .jar мод
           cd build/classes
           jar cvf ../../qwalsss-chatmod-1.21.11.jar fabric.mod.json ru/
 
